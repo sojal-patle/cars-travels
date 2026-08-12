@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Secure Payment{% endblock %}{% block head %}{% if enabled %}<script src="https://checkout.razorpay.com/v1/checkout.js"></script>{% endif %}{% endblock %}{% block content %}
+<div class="container"><div class="form" style="max-width:650px;margin:auto;text-align:center"><div class="eyebrow green">SECURE CHECKOUT</div><h1>Complete your booking</h1><p class="muted">Booking <b>{{booking.booking_code}}</b> • {{booking.vehicle.name}}</p><div class="notice"><strong>Amount to pay: {{site.currency}}{{'%.2f'|format(booking.total)}}</strong></div><br>
+{% if enabled %}<button id="pay" class="btn" style="width:100%">Pay securely with Razorpay →</button><p class="muted" style="font-size:12px">UPI • Cards • Netbanking • Wallets (as enabled on your Razorpay account)</p>
+<script>
+const options={key:"{{key_id}}",amount:"{{(booking.total*100)|int}}",currency:"INR",name:{{site.site_name|tojson}},description:"Travel booking {{booking.booking_code}}",order_id:"{{booking.razorpay_order_id}}",
+prefill:{name:{{booking.customer_name|tojson}},email:{{booking.email|tojson}},contact:{{booking.phone|tojson}}},
+theme:{color:"#22c55e"},handler:function(r){
+ fetch("{{url_for('payment_verify')}}",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+ body:new URLSearchParams({booking_code:"{{booking.booking_code}}",razorpay_payment_id:r.razorpay_payment_id,razorpay_order_id:r.razorpay_order_id,razorpay_signature:r.razorpay_signature})})
+ .then(x=>x.json()).then(x=>{if(x.ok)location.href=x.redirect;else alert(x.error||"Payment verification failed");});
+}};
+document.getElementById("pay").onclick=()=>new Razorpay(options).open();
+</script>
+{% else %}<p class="notice">Online payment is not activated yet. Add your Razorpay live/test credentials to the hosting environment, then this button will become active automatically.</p><a class="btn" href="https://dashboard.razorpay.com/" target="_blank">Open Razorpay Dashboard</a>{% endif %}
+</div></div>{% endblock %}

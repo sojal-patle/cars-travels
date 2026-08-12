@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="{{site.tagline}}"><title>{% block title %}{{site.site_name}}{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">{% block head %}{% endblock %}</head>
+<body><header class="nav"><div class="navin"><a class="brand" href="{{url_for('home')}}"><span class="brandmark">✦</span><span>{{site.site_name}}</span></a>
+<nav class="links"><a href="{{url_for('vehicles')}}">Vehicles</a><a href="{{url_for('packages')}}">Tours</a><a href="{{url_for('availability')}}">Availability</a><a href="{{url_for('reviews')}}">Reviews</a><a href="{{url_for('contact')}}">Contact</a><a class="btn small" href="{{url_for('vehicles')}}">Book a Ride</a></nav></div></header>
+{% with messages=get_flashed_messages() %}{% for m in messages %}<div class="flash">✓ {{m}}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+<a class="wa" href="https://wa.me/{{site.whatsapp}}?text=Hi%20{{site.site_name|urlencode}}%2C%20I%20want%20to%20plan%20a%20trip." target="_blank" aria-label="WhatsApp">◉</a>
+<footer class="footer"><div class="footerin"><div><div class="brand footbrand"><span class="brandmark">✦</span><span>{{site.site_name}}</span></div><p>{{site.tagline}}</p></div><div><b>Contact</b><p>📞 <a href="tel:{{site.phone}}">{{site.phone}}</a><br>✉️ {{site.email}}<br>📍 {{site.address}}</p></div><div><b>Quick Links</b><p><a href="{{url_for('vehicles')}}">Vehicles</a><br><a href="{{url_for('packages')}}">Tours</a><br><a href="{{url_for('contact')}}">Custom Quote</a></p></div></div><div class="copyright">© {{year}} {{site.site_name}} • Built for smooth journeys.</div></footer></body></html>

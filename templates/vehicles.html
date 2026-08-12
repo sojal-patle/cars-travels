@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicles | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .vehicle-image {
+        width: 100% !important;
+        height: 260px !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .card {
+        overflow: hidden;
+    }
+</style>
+
+<div class="hero-mini">
+    <h1>Our Vehicles</h1>
+</div>
+
+<div class="container">
+
+    <form class="form" style="margin-bottom:25px">
+        <div class="row">
+
+            <input
+                style="flex:1;padding:12px;border:1px solid #ccd5e1;border-radius:9px"
+                name="q"
+                value="{{ q }}"
+                placeholder="Search..."
+            >
+
+            <select
+                name="category"
+                style="padding:12px;border:1px solid #ccd5e1;border-radius:9px"
+            >
+                <option value="">All</option>
+
+                {% for c in ['SUV','Sedan','Traveller','Luxury'] %}
+                    <option value="{{ c }}" {% if category == c %}selected{% endif %}>
+                        {{ c }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+            <button class="btn">Search</button>
+
+        </div>
+    </form>
+
+
+    <div class="grid">
+
+        {% for v in vehicles %}
+
+        <div class="card">
+
+            <img
+                src="{{ v.image }}"
+                alt="{{ v.name }}"
+                class="vehicle-image"
+            >
+
+            <div class="card-body">
+
+                <h3>{{ v.name }}</h3>
+
+                <p class="muted">
+                    {{ v.description }}
+                </p>
+
+                <div class="tags">
+
+                    <span class="tag">
+                        👥 {{ v.seats }}
+                    </span>
+
+                    <span class="tag">
+                        ❄️ AC
+                    </span>
+
+                    <span class="tag">
+                        {{ v.category }}
+                    </span>
+
+                </div>
+
+                <div class="row" style="justify-content:space-between">
+
+                    <b class="price">
+                        {{ site.currency }}{{ '%.0f'|format(v.price_per_km) }}/km
+                    </b>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for('book', vehicle_id=v.id) }}"
+                    >
+                        Book Now
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <p>No vehicles found.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
